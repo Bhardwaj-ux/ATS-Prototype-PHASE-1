@@ -20,7 +20,18 @@ SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-phase1-local-dev-key")
 DEBUG = env_bool("DEBUG", default=not ON_VERCEL)
 
 if ON_VERCEL and SECRET_KEY == "django-insecure-phase1-local-dev-key":
-    raise RuntimeError("SECRET_KEY must be set on Vercel.")
+    # Do not abort the build or function startup on Vercel — instead
+    # emit a clear warning and use a generated temporary SECRET_KEY so
+    # the process can start and produce runtime logs for debugging.
+    import sys
+    import secrets
+
+    temp_key = secrets.token_urlsafe(50)
+    print(
+        "WARNING: SECRET_KEY not set on Vercel; using temporary fallback.",
+        file=sys.stderr,
+    )
+    SECRET_KEY = temp_key
 
 vercel_url = os.getenv("VERCEL_URL", "").strip()
 extra_hosts = [host.strip() for host in os.getenv("ALLOWED_HOSTS", "").split(",") if host.strip()]
