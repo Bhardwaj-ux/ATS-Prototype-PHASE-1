@@ -97,9 +97,9 @@ ASGI_APPLICATION = "config.asgi.application"
 database_url = os.getenv("DATABASE_URL", "").strip()
 
 if ON_VERCEL and not database_url:
-    raise RuntimeError(
-        "DATABASE_URL is required on Vercel. SQLite becomes read-only there and breaks login/session writes."
-    )
+    # Vercel deployments should use a database URL when possible.
+    # If none is configured, use a temporary SQLite file in /tmp.
+    database_url = "sqlite:////tmp/elecbits_db.sqlite3"
 
 if database_url:
     DATABASES = {

@@ -3,6 +3,7 @@
   "buildCommand": "bash build_files.sh",
   "functions": {
     "config/asgi.py": {
+      "runtime": "python3.11",
       "maxDuration": 60
     }
   }
