@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "bash build_files.sh",
+  "functions": {
+    "config/asgi.py": {
+      "maxDuration": 60
+    }
+  }
+}
